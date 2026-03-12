@@ -161,7 +161,22 @@ Výstup je ve složce `dist/` — statické soubory připravené pro nasazení n
 
 ---
 
+## Nasazení (Vercel)
+
+Projekt je napojen na Vercel přes GitHub. Každý push na `main` spustí automatický deployment.
+
+Konfigurace je v `vercel.json`:
+- Build command: `npx expo export --platform web`
+- Output directory: `dist/`
+- Rewrites: veškerý provoz směrován na `index.html` (SPA routing)
+
+---
+
 ## Changelog
+
+### v1.0.1 — 2026-03-12
+- Přidán `vercel.json` pro správné nasazení na Vercel
+- Přidáno `"output": "static"` do `app.json` pro korektní statický export
 
 ### v1.0.0 — 2026-03-12
 - Iniciální verze aplikace
