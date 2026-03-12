@@ -107,7 +107,7 @@ export default function DashboardScreen() {
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <Text style={styles.headerTitle}>Vespa Primavera, la Lulu</Text>
+            <Text style={styles.headerTitle}>Vespa Primavera 125, bílá, la Lulu</Text>
           </View>
           <View style={styles.headerKmBadge}>
             <Text style={styles.headerKmValue}>

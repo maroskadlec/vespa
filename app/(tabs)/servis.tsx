@@ -167,7 +167,7 @@ export default function ServisScreen() {
       >
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Přehled servisu</Text>
-          <Text style={styles.headerSub}>Vespa Primavera, la Lulu</Text>
+          <Text style={styles.headerSub}>Vespa Primavera 125, bílá, la Lulu</Text>
         </View>
 
         {/* Progress bar */}
