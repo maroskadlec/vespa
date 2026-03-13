@@ -178,6 +178,41 @@ export function getNextService(
   };
 }
 
+export interface NextServicePair {
+  nextKm: { entry: ServiceEntry; kmRemaining: number } | null;
+  nextTime: { entry: ServiceEntry; daysRemaining: number } | null;
+}
+
+/**
+ * Returns separately the next km-based and next time-based upcoming service.
+ * Both can trigger a service, whichever comes first.
+ */
+export function getNextServicePair(
+  commissioningDate: Date,
+  currentKm: number,
+  completedServices: Record<string, ServiceCompletion> = {}
+): NextServicePair {
+  const timeline = getServiceTimeline(commissioningDate, currentKm, completedServices);
+
+  const nextKmEntry = timeline.find(
+    (e) => e.status !== 'done' && e.milestone.kmThreshold > 0 && e.milestone.monthsThreshold === 0
+  );
+  const nextTimeEntry = timeline.find(
+    (e) => e.status !== 'done' && e.milestone.kmThreshold === 0 && e.milestone.monthsThreshold > 0
+  );
+
+  return {
+    nextKm:
+      nextKmEntry && nextKmEntry.kmRemaining !== null
+        ? { entry: nextKmEntry, kmRemaining: nextKmEntry.kmRemaining }
+        : null,
+    nextTime:
+      nextTimeEntry && nextTimeEntry.daysRemaining !== null
+        ? { entry: nextTimeEntry, daysRemaining: nextTimeEntry.daysRemaining }
+        : null,
+  };
+}
+
 /**
  * Checks whether any service is overdue (upcoming entry with date in the past or km exceeded).
  */

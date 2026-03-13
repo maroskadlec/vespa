@@ -68,10 +68,11 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ animation: 'fade' }} />
         <Stack.Screen
           name="service/[id]"
-          options={{
-            animation: 'slide_from_right',
-            headerShown: false,
-          }}
+          options={{ animation: 'slide_from_right', headerShown: false }}
+        />
+        <Stack.Screen
+          name="nastaveni"
+          options={{ animation: 'slide_from_right', headerShown: false }}
         />
       </Stack>
     </>
