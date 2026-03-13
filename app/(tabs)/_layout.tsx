@@ -26,20 +26,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tabBar,
-        tabBarBackground: () =>
-          Platform.OS === 'ios' ? (
-            <BlurView
-              intensity={80}
-              tint="dark"
-              style={StyleSheet.absoluteFill}
-            />
-          ) : (
-            <View style={[StyleSheet.absoluteFill, styles.tabBarAndroid]} />
-          ),
-        tabBarShowLabel: false,
-        tabBarActiveTintColor: '#19e65e',
-        tabBarInactiveTintColor: 'rgba(255,255,255,0.45)',
+        tabBarStyle: { display: 'none' },
       }}
     >
       <Tabs.Screen
@@ -57,15 +44,6 @@ export default function TabLayout() {
           title: 'Servis',
           tabBarIcon: ({ focused }) => (
             <TabIcon focused={focused} label="Servis" icon="⚙" />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="nastaveni"
-        options={{
-          title: 'Nastavení',
-          tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} label="Nastavení" icon="≡" />
           ),
         }}
       />

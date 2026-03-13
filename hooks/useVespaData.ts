@@ -21,6 +21,7 @@ interface UseVespaDataReturn {
   updateKm: (km: number) => Promise<void>;
   markServiceDone: (milestoneId: string) => Promise<void>;
   clearData: () => Promise<void>;
+  reloadData: () => Promise<void>;
 }
 
 function migrateData(raw: unknown): VespaData {
@@ -101,5 +102,5 @@ export function useVespaData(): UseVespaDataReturn {
     setData(null);
   }, []);
 
-  return { data, isLoading, saveData, updateKm, markServiceDone, clearData };
+  return { data, isLoading, saveData, updateKm, markServiceDone, clearData, reloadData: loadData };
 }

@@ -174,6 +174,14 @@ Konfigurace je v `vercel.json`:
 
 ## Changelog
 
+### v1.1.0 — 2026-03-13
+- Odstraněn spodní tab bar, navigace přepracována na jednostránkový layout
+- Obsah záložky Servis (Celkový pokrok + full timeline) sloučen do hlavní stránky pod nadpis „Přehled prohlídek"
+- Přidána ikona ozubeného kola vedle km badge pro přístup do Nastavení
+- Nastavení přesunuto do stack screenu s tlačítkem „← Zpět" (stejný pattern jako detail servisu)
+- Countdown box „Příští servis za" zobrazuje vždy dva nezávislé údaje: nejbližší km milník a nejbližší časový milník
+- Opraveno: změna km v Nastavení se nyní správně projeví na hlavní stránce po návratu (useFocusEffect + reloadData)
+
 ### v1.0.1 — 2026-03-12
 - Přidán `vercel.json` pro správné nasazení na Vercel
 - Přidáno `"output": "static"` do `app.json` pro korektní statický export
