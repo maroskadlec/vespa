@@ -9,7 +9,6 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 
 import { useVespaData } from '../hooks/useVespaData';
@@ -151,11 +150,6 @@ export default function NastaveniScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#0a1f0f', '#112116', '#0d2414']}
-        style={StyleSheet.absoluteFill}
-      />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
@@ -178,19 +172,14 @@ export default function NastaveniScreen() {
 
         {/* Vehicle section */}
         <Text style={styles.sectionLabel}>Údaje o vozidle</Text>
-        <GlassCard style={styles.settingsCard} intensity={40} dark>
+        <GlassCard style={styles.settingsCard}>
           <View style={styles.fieldGroup}>
             <Text style={styles.label}>Datum uvedení do provozu</Text>
-            <View
-              style={[
-                styles.inputWrapper,
-                dateError ? styles.inputError : null,
-              ]}
-            >
+            <View style={[styles.inputWrapper, dateError ? styles.inputError : null]}>
               <TextInput
                 style={styles.input}
                 placeholder="DD.MM.YYYY"
-                placeholderTextColor="rgba(255,255,255,0.25)"
+                placeholderTextColor="#BBBBBB"
                 value={dateText}
                 onChangeText={handleDateChange}
                 keyboardType="numeric"
@@ -202,16 +191,11 @@ export default function NastaveniScreen() {
 
           <View style={[styles.fieldGroup, styles.fieldGroupLast]}>
             <Text style={styles.label}>Aktuální stav kilometrů</Text>
-            <View
-              style={[
-                styles.inputWrapper,
-                kmError ? styles.inputError : null,
-              ]}
-            >
+            <View style={[styles.inputWrapper, kmError ? styles.inputError : null]}>
               <TextInput
                 style={styles.input}
                 placeholder="0"
-                placeholderTextColor="rgba(255,255,255,0.25)"
+                placeholderTextColor="#BBBBBB"
                 value={kmText}
                 onChangeText={handleKmChange}
                 keyboardType="numeric"
@@ -224,25 +208,18 @@ export default function NastaveniScreen() {
 
         {/* Save button */}
         <TouchableOpacity
-          style={styles.saveButton}
+          style={[styles.saveButton, saved && styles.saveButtonSaved]}
           onPress={handleSave}
           activeOpacity={0.85}
         >
-          <LinearGradient
-            colors={saved ? ['#14c752', '#0fa840'] : ['#23f46e', '#19e65e', '#14c752']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.saveGradient}
-          >
-            <Text style={styles.saveButtonText}>
-              {saved ? '✓ Uloženo' : 'Uložit změny'}
-            </Text>
-          </LinearGradient>
+          <Text style={[styles.saveButtonText, saved && styles.saveButtonTextSaved]}>
+            {saved ? '✓ Uloženo' : 'Uložit změny'}
+          </Text>
         </TouchableOpacity>
 
         {/* App info section */}
         <Text style={styles.sectionLabel}>Informace o aplikaci</Text>
-        <GlassCard style={styles.infoCard} intensity={35} dark>
+        <GlassCard style={styles.infoCard}>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Verze aplikace</Text>
             <Text style={styles.infoValue}>1.0.0</Text>
@@ -263,7 +240,7 @@ export default function NastaveniScreen() {
 
         {/* Danger zone */}
         <Text style={styles.sectionLabel}>Pokročilé</Text>
-        <GlassCard style={styles.dangerCard} intensity={35} dark>
+        <GlassCard style={styles.dangerCard}>
           <TouchableOpacity
             style={styles.dangerButton}
             onPress={handleReset}
@@ -290,7 +267,7 @@ export default function NastaveniScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#112116' },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
   scroll: {
     paddingHorizontal: 20,
     paddingTop: Platform.OS === 'ios' ? 60 : 48,
@@ -303,21 +280,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignSelf: 'flex-start',
   },
-  backArrow: { fontFamily: 'Inter_400Regular', fontSize: 18, color: '#19e65e' },
-  backText: { fontFamily: 'Inter_500Medium', fontSize: 14, color: '#19e65e' },
-  header: {
-    marginBottom: 28,
-  },
+  backArrow: { fontFamily: 'Inter_400Regular', fontSize: 18, color: '#181E25' },
+  backText: { fontFamily: 'Inter_500Medium', fontSize: 14, color: '#181E25' },
+  header: { marginBottom: 28 },
   headerTitle: {
     fontFamily: 'Inter_700Bold',
     fontSize: 28,
-    color: '#ffffff',
+    color: '#181E25',
+    letterSpacing: -0.03 * 28,
   },
   sectionLabel: {
     fontFamily: 'Inter_600SemiBold',
-    fontSize: 12,
-    color: 'rgba(255,255,255,0.4)',
-    letterSpacing: 0.8,
+    fontSize: 11,
+    color: 'rgba(24,30,37,0.4)',
+    letterSpacing: 0.7,
     textTransform: 'uppercase',
     marginBottom: 10,
     marginTop: 4,
@@ -328,54 +304,53 @@ const styles = StyleSheet.create({
   label: {
     fontFamily: 'Inter_500Medium',
     fontSize: 13,
-    color: 'rgba(255,255,255,0.6)',
+    color: 'rgba(24,30,37,0.65)',
     marginBottom: 8,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.07)',
-    borderRadius: 10,
+    backgroundColor: 'rgba(0,0,0,0.04)',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.12)',
+    borderColor: '#DCE0E3',
     paddingHorizontal: 14,
     height: 48,
   },
-  inputError: { borderColor: 'rgba(239,68,68,0.5)' },
+  inputError: { borderColor: 'rgba(255,59,48,0.5)' },
   input: {
     flex: 1,
     fontFamily: 'Inter_400Regular',
     fontSize: 15,
-    color: '#ffffff',
+    color: '#181E25',
     padding: 0,
   },
   inputSuffix: {
     fontFamily: 'Inter_400Regular',
     fontSize: 13,
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(24,30,37,0.4)',
   },
   errorText: {
     fontFamily: 'Inter_400Regular',
     fontSize: 12,
-    color: '#ef4444',
+    color: '#ff3b30',
     marginTop: 4,
   },
   saveButton: {
-    borderRadius: 12,
-    overflow: 'hidden',
+    borderRadius: 14,
+    backgroundColor: '#1C2129',
+    paddingVertical: 15,
+    alignItems: 'center',
     marginBottom: 28,
-    shadowColor: '#19e65e',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 6,
   },
-  saveGradient: { paddingVertical: 15, alignItems: 'center' },
+  saveButtonSaved: { backgroundColor: '#34C759' },
   saveButtonText: {
     fontFamily: 'Inter_600SemiBold',
     fontSize: 15,
-    color: '#0d1f13',
+    color: '#FFFFFF',
+    letterSpacing: -0.01 * 15,
   },
+  saveButtonTextSaved: { color: '#181E25' },
   infoCard: { marginBottom: 28, overflow: 'hidden' },
   infoRow: {
     flexDirection: 'row',
@@ -386,17 +361,17 @@ const styles = StyleSheet.create({
   },
   infoRowBorder: {
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.07)',
+    borderTopColor: '#DCE0E3',
   },
   infoLabel: {
     fontFamily: 'Inter_400Regular',
     fontSize: 14,
-    color: 'rgba(255,255,255,0.55)',
+    color: 'rgba(24,30,37,0.65)',
   },
   infoValue: {
     fontFamily: 'Inter_500Medium',
     fontSize: 14,
-    color: '#ffffff',
+    color: '#181E25',
   },
   dangerCard: { marginBottom: 32, overflow: 'hidden' },
   dangerButton: {
@@ -410,19 +385,19 @@ const styles = StyleSheet.create({
   dangerTitle: {
     fontFamily: 'Inter_500Medium',
     fontSize: 14,
-    color: '#ef4444',
+    color: '#ff3b30',
     marginBottom: 2,
   },
   dangerSubtitle: {
     fontFamily: 'Inter_400Regular',
     fontSize: 12,
-    color: 'rgba(255,255,255,0.35)',
+    color: 'rgba(24,30,37,0.4)',
   },
-  dangerArrow: { fontSize: 16, color: 'rgba(239,68,68,0.5)' },
+  dangerArrow: { fontSize: 16, color: 'rgba(255,59,48,0.5)' },
   footer: {
     fontFamily: 'Inter_400Regular',
     fontSize: 12,
-    color: 'rgba(255,255,255,0.2)',
+    color: 'rgba(24,30,37,0.4)',
     textAlign: 'center',
     marginTop: 8,
   },
