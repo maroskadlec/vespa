@@ -1,0 +1,23 @@
+{
+  "name": "Vespa Tracker",
+  "short_name": "Vespa",
+  "description": "Sleduj servisní intervaly své Vespy",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#FFFFFF",
+  "icons": [
+    {
+      "src": "/assets/icon.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png"
+    }
+  ]
+}

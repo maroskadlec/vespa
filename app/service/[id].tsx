@@ -8,7 +8,7 @@ import {
   Platform,
   Alert,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+
 import { router, useLocalSearchParams } from 'expo-router';
 import { useVespaData } from '../../hooks/useVespaData';
 import { GlassCard } from '../../components/GlassCard';
@@ -19,7 +19,6 @@ export default function ServiceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { data, markServiceDone } = useVespaData();
 
-  // Strip occurrence suffix for time-based IDs (e.g., "months_12_occ2" → "months_12")
   const baseId = id?.replace(/_occ\d+$/, '') ?? '';
 
   const milestone = useMemo(() => {
@@ -94,7 +93,6 @@ export default function ServiceDetailScreen() {
   if (!milestone) {
     return (
       <View style={styles.errorContainer}>
-        <LinearGradient colors={['#0a1f0f', '#112116']} style={StyleSheet.absoluteFill} />
         <Text style={styles.errorText}>Prohlídka nenalezena</Text>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <Text style={styles.backBtnText}>← Zpět</Text>
@@ -108,12 +106,6 @@ export default function ServiceDetailScreen() {
 
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={['#0a1f0f', '#112116', '#0d2414']}
-        style={StyleSheet.absoluteFill}
-      />
-      <View style={styles.headerDecor} />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scroll}
@@ -153,19 +145,7 @@ export default function ServiceDetailScreen() {
 
         {/* Info card */}
         {entry && (
-          <GlassCard style={styles.infoCard} intensity={40} dark>
-            {isUpcoming && (
-              <LinearGradient
-                colors={['rgba(245,158,11,0.12)', 'transparent']}
-                style={StyleSheet.absoluteFill}
-              />
-            )}
-            {isDone && (
-              <LinearGradient
-                colors={['rgba(25,230,94,0.1)', 'transparent']}
-                style={StyleSheet.absoluteFill}
-              />
-            )}
+          <GlassCard style={[styles.infoCard, isUpcoming && styles.infoCardUpcoming, isDone && styles.infoCardDone]}>
             <View style={styles.infoRow}>
               {milestone.kmThreshold > 0 && (
                 <View style={styles.infoItem}>
@@ -201,7 +181,7 @@ export default function ServiceDetailScreen() {
               )}
               {!isDone && entry.daysRemaining !== null && (
                 <View style={styles.infoItem}>
-                  <Text style={[styles.infoValue, styles.infoValueHighlight]}>
+                  <Text style={[styles.infoValue, styles.infoValueHighlightBlue]}>
                     {entry.daysRemaining} dní
                   </Text>
                   <Text style={styles.infoLabel}>Zbývá dní</Text>
@@ -212,7 +192,7 @@ export default function ServiceDetailScreen() {
         )}
 
         {/* Progress */}
-        <GlassCard style={styles.progressCard} intensity={35} dark>
+        <GlassCard style={styles.progressCard}>
           <View style={styles.progressHeader}>
             <Text style={styles.progressLabel}>Průběh kontroly</Text>
             <Text style={styles.progressCount}>
@@ -220,19 +200,14 @@ export default function ServiceDetailScreen() {
             </Text>
           </View>
           <View style={styles.progressTrack}>
-            <LinearGradient
-              colors={['#19e65e', '#14c752']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={[styles.progressFill, { width: `${progress * 100}%` }]}
-            />
+            <View style={[styles.progressFill, { width: `${progress * 100}%` }]} />
           </View>
           {allChecked && (
             <Text style={styles.progressDone}>Všechny úkony zkontrolovány!</Text>
           )}
         </GlassCard>
 
-        {/* Checklist header + Označit vše */}
+        {/* Checklist header */}
         <View style={styles.checklistHeaderRow}>
           <Text style={styles.checklistHeader}>
             Servisní úkony ({milestone.items.length})
@@ -244,7 +219,7 @@ export default function ServiceDetailScreen() {
           </TouchableOpacity>
         </View>
 
-        <GlassCard style={styles.checklistCard} intensity={35} dark>
+        <GlassCard style={styles.checklistCard}>
           {milestone.items.map((item, index) => (
             <TouchableOpacity
               key={index}
@@ -292,7 +267,7 @@ export default function ServiceDetailScreen() {
           ))}
         </GlassCard>
 
-        {/* Mark as done button – only when not already done */}
+        {/* Mark as done button */}
         {!isDone && (
           <TouchableOpacity
             style={[styles.doneButton, saving && styles.doneButtonDisabled]}
@@ -300,16 +275,9 @@ export default function ServiceDetailScreen() {
             activeOpacity={0.85}
             disabled={saving}
           >
-            <LinearGradient
-              colors={['#23f46e', '#19e65e', '#14c752']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={styles.doneGradient}
-            >
-              <Text style={styles.doneButtonText}>
-                {saving ? 'Ukládám...' : 'Servisní prohlídka byla vykonána'}
-              </Text>
-            </LinearGradient>
+            <Text style={styles.doneButtonText}>
+              {saving ? 'Ukládám...' : 'Servisní prohlídka byla vykonána'}
+            </Text>
           </TouchableOpacity>
         )}
 
@@ -321,35 +289,32 @@ export default function ServiceDetailScreen() {
 
 function getActionStyle(action: string): object {
   const map: Record<string, object> = {
-    I: { color: '#60a5fa' },
-    R: { color: '#f87171' },
-    A: { color: '#fbbf24' },
-    L: { color: '#34d399' },
-    C: { color: '#a78bfa' },
+    I: { color: '#2563EB' },
+    R: { color: '#ff3b30' },
+    A: { color: '#ff9500' },
+    L: { color: '#34C759' },
+    C: { color: '#7C3AED' },
   };
   return map[action] ?? {};
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#112116' },
-  errorContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  errorContainer: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
   errorText: {
     fontFamily: 'Inter_400Regular',
-    color: 'rgba(255,255,255,0.5)',
+    color: 'rgba(24,30,37,0.4)',
     fontSize: 16,
     marginBottom: 16,
   },
   backBtn: { padding: 12 },
-  backBtnText: { fontFamily: 'Inter_500Medium', color: '#19e65e', fontSize: 15 },
-  headerDecor: {
-    position: 'absolute',
-    top: -60,
-    right: -60,
-    width: 220,
-    height: 220,
-    borderRadius: 110,
-    backgroundColor: 'rgba(25,230,94,0.06)',
-  },
+  backBtnText: { fontFamily: 'Inter_500Medium', color: '#181E25', fontSize: 15 },
   scroll: {
     paddingHorizontal: 20,
     paddingTop: Platform.OS === 'ios' ? 60 : 48,
@@ -362,56 +327,62 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     alignSelf: 'flex-start',
   },
-  backArrow: { fontFamily: 'Inter_400Regular', fontSize: 18, color: '#19e65e' },
-  backText: { fontFamily: 'Inter_500Medium', fontSize: 14, color: '#19e65e' },
+  backArrow: { fontFamily: 'Inter_400Regular', fontSize: 18, color: '#181E25' },
+  backText: { fontFamily: 'Inter_500Medium', fontSize: 14, color: '#181E25' },
   titleArea: { marginBottom: 16 },
   titleSub: {
-    fontFamily: 'Inter_400Regular',
-    fontSize: 13,
-    color: 'rgba(255,255,255,0.4)',
+    fontFamily: 'Inter_600SemiBold',
+    fontSize: 11,
+    color: 'rgba(24,30,37,0.4)',
     marginBottom: 4,
+    letterSpacing: 0.7,
+    textTransform: 'uppercase',
   },
   title: {
     fontFamily: 'Inter_700Bold',
-    fontSize: 30,
-    color: '#ffffff',
+    fontSize: 28,
+    color: '#181E25',
     marginBottom: 12,
+    letterSpacing: -0.03 * 28,
   },
   badges: { flexDirection: 'row', gap: 8, flexWrap: 'wrap' },
-  badge: { borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, borderWidth: 1 },
+  badge: { borderRadius: 50, paddingHorizontal: 12, paddingVertical: 5, borderWidth: 1 },
   badgeDone: {
-    backgroundColor: 'rgba(25,230,94,0.12)',
-    borderColor: 'rgba(25,230,94,0.25)',
+    backgroundColor: 'rgba(52,199,89,0.12)',
+    borderColor: 'rgba(52,199,89,0.35)',
   },
-  badgeTextDone: { fontFamily: 'Inter_500Medium', fontSize: 12, color: '#19e65e' },
+  badgeTextDone: { fontFamily: 'Inter_500Medium', fontSize: 12, color: '#181E25' },
   badgeUpcoming: {
-    backgroundColor: 'rgba(245,158,11,0.12)',
-    borderColor: 'rgba(245,158,11,0.3)',
+    backgroundColor: 'rgba(255,149,0,0.12)',
+    borderColor: 'rgba(255,149,0,0.3)',
   },
-  badgeTextUpcoming: { fontFamily: 'Inter_500Medium', fontSize: 12, color: '#f59e0b' },
+  badgeTextUpcoming: { fontFamily: 'Inter_500Medium', fontSize: 12, color: '#7a4500' },
   badgeFuture: {
-    backgroundColor: 'rgba(255,255,255,0.07)',
-    borderColor: 'rgba(255,255,255,0.15)',
+    backgroundColor: 'rgba(24,30,37,0.05)',
+    borderColor: '#DCE0E3',
   },
   badgeTextFuture: {
     fontFamily: 'Inter_500Medium',
     fontSize: 12,
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(24,30,37,0.4)',
   },
-  infoCard: { marginBottom: 14, padding: 16, overflow: 'hidden' },
+  infoCard: { marginBottom: 14, padding: 16 },
+  infoCardUpcoming: { borderColor: 'rgba(255,149,0,0.25)', borderLeftWidth: 3, borderLeftColor: '#ff9500' },
+  infoCardDone: { borderColor: 'rgba(52,199,89,0.3)', borderLeftWidth: 3, borderLeftColor: '#34C759' },
   infoRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 20 },
   infoItem: { minWidth: 80 },
   infoValue: {
     fontFamily: 'Inter_700Bold',
     fontSize: 16,
-    color: '#ffffff',
+    color: '#181E25',
     marginBottom: 2,
   },
-  infoValueHighlight: { color: '#f59e0b' },
+  infoValueHighlight: { color: '#ff9500' },
+  infoValueHighlightBlue: { color: '#2563EB' },
   infoLabel: {
     fontFamily: 'Inter_400Regular',
     fontSize: 11,
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(24,30,37,0.4)',
   },
   progressCard: { padding: 16, marginBottom: 20 },
   progressHeader: {
@@ -422,21 +393,21 @@ const styles = StyleSheet.create({
   progressLabel: {
     fontFamily: 'Inter_500Medium',
     fontSize: 14,
-    color: 'rgba(255,255,255,0.65)',
+    color: 'rgba(24,30,37,0.65)',
   },
-  progressCount: { fontFamily: 'Inter_600SemiBold', fontSize: 14, color: '#19e65e' },
+  progressCount: { fontFamily: 'Inter_600SemiBold', fontSize: 14, color: '#181E25' },
   progressTrack: {
-    height: 6,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    borderRadius: 3,
+    height: 5,
+    backgroundColor: 'rgba(0,0,0,0.08)',
+    borderRadius: 10,
     overflow: 'hidden',
     marginBottom: 6,
   },
-  progressFill: { height: '100%', borderRadius: 3 },
+  progressFill: { height: '100%', borderRadius: 10, backgroundColor: '#ffae5d' },
   progressDone: {
     fontFamily: 'Inter_500Medium',
     fontSize: 12,
-    color: '#19e65e',
+    color: '#34C759',
     marginTop: 4,
   },
   checklistHeaderRow: {
@@ -448,20 +419,20 @@ const styles = StyleSheet.create({
   checklistHeader: {
     fontFamily: 'Inter_600SemiBold',
     fontSize: 15,
-    color: 'rgba(255,255,255,0.7)',
+    color: '#181E25',
   },
   selectAllBtn: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    backgroundColor: 'rgba(25,230,94,0.12)',
-    borderRadius: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    backgroundColor: '#F3F5F7',
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(25,230,94,0.2)',
+    borderColor: '#DCE0E3',
   },
   selectAllText: {
     fontFamily: 'Inter_500Medium',
     fontSize: 12,
-    color: '#19e65e',
+    color: '#181E25',
   },
   checklistCard: { overflow: 'hidden', marginBottom: 20 },
   checklistRow: {
@@ -473,51 +444,46 @@ const styles = StyleSheet.create({
   },
   checklistRowBorder: {
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.06)',
+    borderTopColor: '#DCE0E3',
   },
-  checklistRowChecked: { backgroundColor: 'rgba(25,230,94,0.04)' },
+  checklistRowChecked: { backgroundColor: 'rgba(52,199,89,0.08)' },
   checkbox: {
     width: 24,
     height: 24,
     borderRadius: 7,
     borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.2)',
+    borderColor: 'rgba(24,30,37,0.18)',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
   },
-  checkboxChecked: { backgroundColor: '#19e65e', borderColor: '#19e65e' },
-  checkmark: { fontSize: 13, color: '#0d1f13', fontFamily: 'Inter_700Bold' },
+  checkboxChecked: { backgroundColor: '#34C759', borderColor: '#34C759' },
+  checkmark: { fontSize: 13, color: '#181E25', fontFamily: 'Inter_700Bold' },
   checklistContent: { flex: 1 },
   checklistName: {
     fontFamily: 'Inter_500Medium',
     fontSize: 14,
-    color: '#ffffff',
+    color: '#181E25',
     marginBottom: 2,
   },
   checklistNameDone: {
-    color: 'rgba(255,255,255,0.4)',
+    color: 'rgba(24,30,37,0.4)',
     textDecorationLine: 'line-through',
   },
   checklistAction: { fontFamily: 'Inter_400Regular', fontSize: 12 },
   checklistActionDone: { opacity: 0.4 },
   doneButton: {
     borderRadius: 14,
-    overflow: 'hidden',
-    shadowColor: '#19e65e',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  doneButtonDisabled: { opacity: 0.6 },
-  doneGradient: {
+    backgroundColor: '#1C2129',
     paddingVertical: 18,
     alignItems: 'center',
   },
+  doneButtonDisabled: { opacity: 0.5 },
   doneButtonText: {
     fontFamily: 'Inter_700Bold',
     fontSize: 16,
-    color: '#0d1f13',
+    color: '#FFFFFF',
+    letterSpacing: -0.01 * 16,
   },
   bottomSpacer: { height: 40 },
 });
